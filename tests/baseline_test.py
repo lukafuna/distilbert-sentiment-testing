@@ -17,7 +17,6 @@ def test_clearly_negative(classifier):
 
 def test_empty_string(classifier):
     result = classifier("")[0]
-    # We're not asserting a specific label here, just that it doesn't crash
     assert result["label"] in ["POSITIVE", "NEGATIVE"]
 
 
@@ -37,12 +36,11 @@ def test_all_caps(classifier):
 
 
 def test_numbers_only(classifier):
-    # Just checking it doesn't crash on nonsense input
     result = classifier("12345")[0]
     assert result["label"] in ["POSITIVE", "NEGATIVE"]
 
 
 def test_long_text(classifier):
-    long_text = "This movie was great. " * 50  # repeated positive sentence
+    long_text = "This movie was great. " * 50
     result = classifier(long_text)[0]
     assert result["label"] == "POSITIVE"
