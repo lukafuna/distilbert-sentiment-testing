@@ -1,5 +1,9 @@
 import pytest
 from transformers import pipeline
+import json
+import os
+
+os.makedirs("results/data", exist_ok=True)
 
 
 @pytest.fixture(scope="module")
@@ -41,7 +45,11 @@ def test_synonym_invariance(classifier):
     violation_rate = violations / total
     print(f"\nSynonym Invariance violation rate: {violation_rate:.1%} ({violations}/{total})")
 
-    assert violation_rate <= 0.3, f"Too many synonym invariance violations: {violation_rate:.1%}"
+    with open("results/data/synonym_invariance.json", "w") as f:
+        json.dump({"relation": "Synonym Invariance", "violation_rate": violation_rate * 100,
+                   "violations": violations, "total": total}, f)
+
+    assert violation_rate < 0.3, f"Too many synonym invariance violations: {violation_rate:.1%}"
 
 NEGATION_PAIRS = [
     ("I don't dislike this movie", "I dislike this movie"),  # double negative flip
@@ -60,7 +68,6 @@ def test_negation_flips_sentiment(classifier):
         label_original = get_label(classifier, original)
         label_negated = get_label(classifier, negated)
 
-
         if label_original == label_negated:
             violations += 1
             print(f"VIOLATION (no flip): '{original}' -> {label_original} | '{negated}' -> {label_negated}")
@@ -68,7 +75,11 @@ def test_negation_flips_sentiment(classifier):
     violation_rate = violations / total
     print(f"\nNegation DIR violation rate: {violation_rate:.1%} ({violations}/{total})")
 
-    assert violation_rate <= 0.5, f"Too many negation violations: {violation_rate:.1%}"
+    with open("results/data/negation_dir.json", "w") as f:
+        json.dump({"relation": "Negation (hard cases)", "violation_rate": violation_rate * 100,
+                   "violations": violations, "total": total}, f)
+
+    assert violation_rate < 0.5, f"Too many negation violations: {violation_rate:.1%}"
 
 
 IRRELEVANT_INSERTION_PAIRS = [
@@ -94,7 +105,11 @@ def test_irrelevant_insertion_invariance(classifier):
     violation_rate = violations / total
     print(f"\nIrrelevant insertion violation rate: {violation_rate:.1%} ({violations}/{total})")
 
-    assert violation_rate <= 0.3, f"Too many insertion violations: {violation_rate:.1%}"
+    with open("results/data/irrelevant_insertion.json", "w") as f:
+        json.dump({"relation": "Irrelevant Insertion", "violation_rate": violation_rate * 100,
+                   "violations": violations, "total": total}, f)
+
+    assert violation_rate < 0.3, f"Too many insertion violations: {violation_rate:.1%}"
 
 
 CONTRAST_PAIRS = [
@@ -146,17 +161,23 @@ def test_typo_robustness(classifier):
     ]
 
     violations = 0
-    total_runs = 3
+    runs_per_sentence = 3
+    total_checks = len(sentences) * runs_per_sentence
 
     for sentence in sentences:
         original_label = get_label(classifier, sentence)
-        for _ in range(total_runs):
+        for _ in range(runs_per_sentence):
             typo_version = aug.augment(sentence)[0]
             typo_label = get_label(classifier, typo_version)
+            print(f"'{sentence}' -> {original_label} | '{typo_version}' -> {typo_label}")
             if original_label != typo_label:
                 violations += 1
 
-    total_checks = len(sentences) * total_runs
     rate = violations / total_checks
     print(f"\nTypo robustness violation rate: {rate:.1%} ({violations}/{total_checks})")
+
+    with open("results/data/typo_robustness.json", "w") as f:
+        json.dump({"relation": "Typo Robustness", "violation_rate": rate * 100,
+                   "violations": violations, "total": total_checks}, f)
+
     assert True
