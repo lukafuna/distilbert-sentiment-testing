@@ -15,18 +15,20 @@ Full methodology and findings are documented in the project's accompanying repor
 
 ## Project structure
 
+```text
 sentiment-model-robustness-testing/
-├── tests/
-│   ├── baseline_test.py          # Sanity checks on simple, unambiguous inputs
-│   ├── metamorphic_test.py       # Core metamorphic relations + typo robustness
-│   ├── robustness_test.py        # Dataset-level accuracy (IMDB, clean vs. perturbed)
-│   └── bias_test.py              # Name-invariance and confidence-sensitivity bias checks
-├── charts/
-│   ├── metamorphic_chart_gen.py
-│   ├── robustness_chart_gen.py
-│   └── bias_chart_gen.py
-├── results/
-│   ├── data/                     # Raw JSON results written by the test suite
-│   └── charts/                   # Generated chart images
-├── requirements.txt
-└── README.md
+|-- tests/
+|   |-- baseline_test.py
+|   |-- metamorphic_test.py
+|   |-- robustness_test.py
+|   `-- bias_test.py
+|-- charts/
+|   |-- metamorphic_chart_gen.py
+|   |-- robustness_chart_gen.py
+|   `-- bias_chart_gen.py
+|-- results/
+|   |-- data/
+|   `-- charts/
+|-- requirements.txt
+`-- README.md
+```
