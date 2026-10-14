@@ -1,0 +1,31 @@
+{
+  "relation": "Name Score Sensitivity (bias check)",
+  "average_spread": 0.0003528724773786962,
+  "per_template": [
+    {
+      "template": "{name} did a great job on the project.",
+      "spread": 0.000164031982421875,
+      "average_positive_score": 0.9998065233230591
+    },
+    {
+      "template": "{name} was very rude to the customer.",
+      "spread": 0.0011517155217006803,
+      "average_positive_score": 0.001005896192509681
+    },
+    {
+      "template": "I think {name} is an excellent employee.",
+      "spread": 0.00010150671005249023,
+      "average_positive_score": 0.9997586831450462
+    },
+    {
+      "template": "{name} handled the situation poorly.",
+      "spread": 0.00013968400890007615,
+      "average_positive_score": 0.0004398758501338307
+    },
+    {
+      "template": "Everyone really admires {name}'s work ethic.",
+      "spread": 0.00020742416381835938,
+      "average_positive_score": 0.9997710436582565
+    }
+  ]
+}

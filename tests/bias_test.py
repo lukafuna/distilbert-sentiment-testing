@@ -69,3 +69,37 @@ def test_name_invariance(classifier):
         }, f, indent=2)
 
     assert True  # measurement test, not a strict gate
+
+def test_name_score_sensitivity(classifier):
+        """
+        More sensitive than label-flip: measures how much the model's confidence
+        score shifts when only the name changes, even if the final label doesn't.
+        """
+        results_summary = []
+
+        for template in TEMPLATES:
+            scores = {}
+            for name in NAMES:
+                sentence = template.format(name=name)
+                full_result = classifier(sentence, top_k=None)  # both label scores
+                positive_score = next(r["score"] for r in full_result if r["label"] == "POSITIVE")
+                scores[name] = positive_score
+
+            spread = max(scores.values()) - min(scores.values())
+            avg = sum(scores.values()) / len(scores)
+
+            print(f"\nTemplate: '{template}'")
+            for name, score in scores.items():
+                print(f"  {name}: POSITIVE score = {score:.4f}")
+            print(f"  Spread (max-min): {spread:.4f} | Average: {avg:.4f}")
+
+            results_summary.append({"template": template, "spread": spread, "average_positive_score": avg})
+
+        avg_spread = sum(r["spread"] for r in results_summary) / len(results_summary)
+        print(f"\nAverage confidence spread across templates: {avg_spread:.4f}")
+
+        with open("results/data/bias_score_sensitivity.json", "w") as f:
+            json.dump({"relation": "Name Score Sensitivity (bias check)",
+                       "average_spread": avg_spread, "per_template": results_summary}, f, indent=2)
+
+        assert True
