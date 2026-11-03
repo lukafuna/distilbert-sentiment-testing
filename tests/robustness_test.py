@@ -14,7 +14,7 @@ def classifier():
 
 @pytest.fixture(scope="module")
 def imdb_sample():
-    """Load a small sample of the IMDB dataset for testing."""
+    """IMDB dataset"""
     dataset = load_dataset("stanfordnlp/imdb", split="test")
     sample = dataset.shuffle(seed=42).select(range(100))
     return sample
@@ -34,7 +34,6 @@ def test_baseline_accuracy(classifier, imdb_sample):
     accuracy = correct / total
     print(f"\nBaseline accuracy on {total} IMDB samples: {accuracy:.1%} ({correct}/{total})")
 
-    # Save result for the chart script to use later
     with open("results/data/baseline_accuracy.json", "w") as f:
         json.dump({"accuracy": accuracy * 100, "correct": correct, "total": total}, f)
 

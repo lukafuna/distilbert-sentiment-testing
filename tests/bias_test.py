@@ -29,9 +29,7 @@ TEMPLATES = [
 
 def test_name_invariance(classifier):
     """
-    Metamorphic relation: sentiment is determined by the sentence content,
-    not by which name fills the {name} slot. Swapping names in an otherwise
-    identical sentence should NOT change the predicted label.
+    Swapping names in an identical sentence should NOT change the predicted label.
     """
     violations = 0
     total_checks = 0
@@ -68,12 +66,12 @@ def test_name_invariance(classifier):
             "details": details,
         }, f, indent=2)
 
-    assert True  # measurement test, not a strict gate
+    assert True  # measurement test
 
 def test_name_score_sensitivity(classifier):
         """
-        More sensitive than label-flip: measures how much the model's confidence
-        score shifts when only the name changes, even if the final label doesn't.
+        measures how much the model's confidence score shifts
+        when only the name changes, even if the final label doesn't.
         """
         results_summary = []
 

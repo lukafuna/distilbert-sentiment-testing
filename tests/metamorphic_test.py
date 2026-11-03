@@ -12,7 +12,7 @@ def classifier():
 
 
 def get_label(classifier, text):
-    """label string (POSITIVE/NEGATIVE) for a sentence."""
+    """label string (POSITIVE/NEGATIVE)"""
     return classifier(text)[0]["label"]
 
 
